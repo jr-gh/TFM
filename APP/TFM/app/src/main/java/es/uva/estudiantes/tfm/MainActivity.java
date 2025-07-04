@@ -1,59 +1,44 @@
 package es.uva.estudiantes.tfm;
 
-
 import static java.lang.System.exit;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
 
-
-import org.tensorflow.lite.DataType;
-import org.tensorflow.lite.support.common.FileUtil;
-import org.tensorflow.lite.support.common.ops.CastOp;
-import org.tensorflow.lite.support.common.ops.NormalizeOp;
-import org.tensorflow.lite.support.common.ops.QuantizeOp;
-import org.tensorflow.lite.support.image.ImageProcessor;
-import org.tensorflow.lite.support.image.TensorImage;
-import org.tensorflow.lite.support.image.ops.ResizeOp;
-
-import org.tensorflow.lite.DataType;
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.MappedByteBuffer;
-import org.tensorflow.lite.InterpreterFactory;
-import org.tensorflow.lite.InterpreterApi;
-
-
-
 
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String APP_NAME = "TFM_final";
+    public static String APP_NAME = "TFM_ULTIMATE";
 
     public static File destinationFolderFile;
+
+    private Button executeButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+        // Vinculamos el botón con el código Java
+        executeButton = findViewById(R.id.buttonExecution);
+
+        // Establecemos la acción al hacer clic
+        executeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ejecutamos secuencialmente en un thread separado todos los modelos
+                executeModels();
+            }
+        });
+
 
 
 
@@ -105,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         File externalStorageDirectoryFile = android.os.Environment.getExternalStorageDirectory();
-        this.destinationFolderFile = new File (externalStorageDirectoryFile.getAbsolutePath() + "/Documents/" + MainActivity.APP_NAME);
-        if(!this.destinationFolderFile.exists()) {
+        this.destinationFolderFile = new File(externalStorageDirectoryFile.getAbsolutePath() + "/Documents/" + MainActivity.APP_NAME);
+        if (!this.destinationFolderFile.exists()) {
             this.destinationFolderFile.mkdirs();
 
-System.out.println(">>>>>>>> [MainActivity] 00000000 created!!!");
+            System.out.println(">>>>>>>> [MainActivity] Folder created: " + APP_NAME);
 
         }
 
@@ -118,69 +103,50 @@ System.out.println(">>>>>>>> [MainActivity] 00000000 created!!!");
         // MOVENET MODELS
         //----------------------------------------------------------------------------------------------------
 
-        Movenet movenet_lightning_8 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_UINT8);
-        movenet_lightning_8.run();
-        System.out.println("----------------------------------------------------------------------------------------------------");
-
-        Movenet movenet_lightning_16 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_FLOAT16);
-        movenet_lightning_16.run();
-        System.out.println("----------------------------------------------------------------------------------------------------");
-
-        Movenet movenet_lightning_32 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_FLOAT32);
-        movenet_lightning_32.run();
-        System.out.println("----------------------------------------------------------------------------------------------------");
-
-
-
-        Movenet movenet_thunder_8 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_UINT8);
-        movenet_thunder_8.run();
-        System.out.println("----------------------------------------------------------------------------------------------------");
-
-        Movenet movenet_thunder_16 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_FLOAT16);
-        movenet_thunder_16.run();
-        System.out.println("----------------------------------------------------------------------------------------------------");
-
-        Movenet movenet_thunder_32 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_FLOAT32);
-        movenet_thunder_32.run();
-        System.out.println("----------------------------------------------------------------------------------------------------");
-
+//        Movenet movenet_lightning_8 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_UINT8);
+//        movenet_lightning_8.run();
+//
+//        Movenet movenet_lightning_16 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_FLOAT16);
+//        movenet_lightning_16.run();
+//
+//        Movenet movenet_lightning_32 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_FLOAT32);
+//        movenet_lightning_32.run();
+//
+//
+//        Movenet movenet_thunder_8 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_UINT8);
+//        movenet_thunder_8.run();
+//
+//        Movenet movenet_thunder_16 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_FLOAT16);
+//        movenet_thunder_16.run();
+//
+//        Movenet movenet_thunder_32 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_FLOAT32);
+//        movenet_thunder_32.run();
 
         //----------------------------------------------------------------------------------------------------
 
 
-
-
         //----------------------------------------------------------------------------------------------------
-        // POSENET MODELS                   ¡¡¡¡¡¡¡¡DESCARTADOS!!!!!!!!
+        // POSENET MODELS                   ¡¡¡¡¡¡¡¡ DESCARTADO !!!!!!!!
         //----------------------------------------------------------------------------------------------------
 
 //        Posenet posenet = new Posenet(this);
 //        posenet.run();
 
-//        System.out.println("----------------------------------------------------------------------------------------------------");
-
         //----------------------------------------------------------------------------------------------------
-
-
-
-
 
 
         //----------------------------------------------------------------------------------------------------
         // BLAZEPOSE MODELS
         //----------------------------------------------------------------------------------------------------
-//
+
 //        BlazePose blazePoseLite = new BlazePose(this, BlazePose.TYPE_LITE);
 //        blazePoseLite.run();
-//        System.out.println("----------------------------------------------------------------------------------------------------");
 //
 //        BlazePose blazePoseFull = new BlazePose(this, BlazePose.TYPE_FULL);
 //        blazePoseFull.run();
-//        System.out.println("----------------------------------------------------------------------------------------------------");
 //
 //        BlazePose blazePoseHeavy = new BlazePose(this, BlazePose.TYPE_HEAVY);
 //        blazePoseHeavy.run();
-//        System.out.println("----------------------------------------------------------------------------------------------------");
 
         //----------------------------------------------------------------------------------------------------
 
@@ -190,13 +156,92 @@ System.out.println(">>>>>>>> [MainActivity] 00000000 created!!!");
 //        this.finishAffinity();
 //        finishAndRemoveTask();
 
-
     }
 
 
+    private void executeModels() {
+
+        // Creamos un thread nuevo para la ejecución de tareas largas
+        new Thread(() -> {
+            // Actualizamos el componente de la interfaz
+            runOnUiThread(() -> {
+                findViewById(R.id.textViewMovenetL8).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewMovenetL16).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewMovenetL32).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewMovenetT8).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewMovenetT16).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewMovenetT32).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewBlazeposeL).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewBlazeposeF).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewBlazeposeH).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewYolo8n).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewYolo8s).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+                findViewById(R.id.textViewYolo8m).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+            });
+
+
+            // Actualizamos el etado del boton en la interfaz: deshabilitado
+            runOnUiThread(() -> {
+                executeButton.setEnabled(false);
+            });
+
+            //----------------------------------------------------------------------------------------------------
+            // MOVENET MODELS
+            //----------------------------------------------------------------------------------------------------
+            Movenet movenet_lightning_8 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_UINT8);
+            movenet_lightning_8.run();
+
+            Movenet movenet_lightning_16 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_FLOAT16);
+            movenet_lightning_16.run();
+
+            Movenet movenet_lightning_32 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_FLOAT32);
+            movenet_lightning_32.run();
+
+
+            Movenet movenet_thunder_8 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_UINT8);
+            movenet_thunder_8.run();
+
+            Movenet movenet_thunder_16 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_FLOAT16);
+            movenet_thunder_16.run();
+
+            Movenet movenet_thunder_32 = new Movenet(this, Movenet.TYPE_THUNDER, Movenet.DATA_TYPE_FLOAT32);
+            movenet_thunder_32.run();
+            //----------------------------------------------------------------------------------------------------
+
+
+            //----------------------------------------------------------------------------------------------------
+            // POSENET MODELS                   ¡¡¡¡¡¡¡¡ DESCARTADO !!!!!!!!
+            //----------------------------------------------------------------------------------------------------
+
+//        Posenet posenet = new Posenet(this);
+//        posenet.run();
+
+            //----------------------------------------------------------------------------------------------------
+
+
+            //----------------------------------------------------------------------------------------------------
+            // BLAZEPOSE MODELS
+            //----------------------------------------------------------------------------------------------------
+            BlazePose blazePoseLite = new BlazePose(this, BlazePose.TYPE_LITE);
+            blazePoseLite.run();
+
+            BlazePose blazePoseFull = new BlazePose(this, BlazePose.TYPE_FULL);
+            blazePoseFull.run();
+
+            BlazePose blazePoseHeavy = new BlazePose(this, BlazePose.TYPE_HEAVY);
+            blazePoseHeavy.run();
+            //----------------------------------------------------------------------------------------------------
 
 
 
+            // Actualizamos el etado del boton en la interfaz: habilitado
+            runOnUiThread(() -> {
+                executeButton.setEnabled(true);
+            });
 
 
+        }).start();
+
+
+    }
 }

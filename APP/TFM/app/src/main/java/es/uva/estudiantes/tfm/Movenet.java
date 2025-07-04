@@ -1,10 +1,9 @@
 package es.uva.estudiantes.tfm;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Debug;
-import android.os.Trace;
+
+import androidx.core.content.ContextCompat;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.InterpreterApi;
@@ -14,19 +13,9 @@ import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.nio.MappedByteBuffer;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 
 public class Movenet extends TensorFlowLiteModel {
@@ -48,7 +37,7 @@ public class Movenet extends TensorFlowLiteModel {
      * @param contextParam
      * @param typeParam
      */
-    protected Movenet(Context contextParam, int typeParam, int dataTypeParam) {
+    protected Movenet(MainActivity contextParam, int typeParam, int dataTypeParam) {
         // Comprobamos y leemos los ficheros de datos (lista de imagenes y anotaciones)
         super();
 
@@ -64,7 +53,8 @@ public class Movenet extends TensorFlowLiteModel {
         }
 
         // Definimos los parámetros de la red
-        this.context = contextParam;
+        this.mainActivity = contextParam;
+
         switch (typeParam) {
             case TYPE_LIGHTNING:
                 // Inicializamos los valores de alto y ancho para el modelo especificado
@@ -73,7 +63,10 @@ public class Movenet extends TensorFlowLiteModel {
 
                 switch (dataTypeParam) {
                     case DATA_TYPE_UINT8:
-                        // Modelo Movenet lightning
+                        // Nombre visual para el modelo
+                        this.modelName = "Movenet lightning 8";
+
+                        // Modelo Movenet lightning int8
                         this.fileModelName = "lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite";
 
                         // Inicializamos el nombre del fichero donde almacenaremos las predicciones del modelo
@@ -82,11 +75,17 @@ public class Movenet extends TensorFlowLiteModel {
                         this.outputPerformanceFileName = "Movenet_lightning_performance_8.txt";
 
                         // Inicializamos el valor del tipo de datos de entrada de la red
-                        modelDataType = DataType.UINT8;
+                        this.modelDataType = DataType.UINT8;
+
+                        // Componente de la interfaz para mostrar el proceso del test
+                        this.component = mainActivity.findViewById(R.id.textViewMovenetL8);
                         break;
 
                     case DATA_TYPE_FLOAT16:
-                        // Modelo Movenet lightning
+                        // Nombre visual para el modelo
+                        this.modelName = "Movenet lightning 16";
+
+                        // Modelo Movenet lightning float 16
                         this.fileModelName = "lite-model_movenet_singlepose_lightning_tflite_float16_4.tflite";
 
                         // Inicializamos el nombre del fichero donde almacenaremos las predicciones del modelo
@@ -95,11 +94,17 @@ public class Movenet extends TensorFlowLiteModel {
                         this.outputPerformanceFileName = "Movenet_lightning_performance_16.txt";
 
                         // Inicializamos el valor del tipo de datos de entrada de la red
-                        modelDataType = DataType.UINT8;
+                        this.modelDataType = DataType.UINT8;
+
+                        // Componente de la interfaz para mostrar el proceso del test
+                        this.component = mainActivity.findViewById(R.id.textViewMovenetL16);
                         break;
 
                     case DATA_TYPE_FLOAT32:
-                        // Modelo Movenet lightning
+                        // Nombre visual para el modelo
+                        this.modelName = "Movenet lightning 32";
+
+                        // Modelo Movenet lightning float32
                         this.fileModelName = "lite-model_movenet_singlepose_lightning_3.tflite";
 
                         // Inicializamos el nombre del fichero donde almacenaremos las predicciones del modelo
@@ -108,7 +113,10 @@ public class Movenet extends TensorFlowLiteModel {
                         this.outputPerformanceFileName = "Movenet_lightning_performance_32.txt";
 
                         // Inicializamos el valor del tipo de datos de entrada de la red
-                        modelDataType = DataType.FLOAT32;
+                        this.modelDataType = DataType.FLOAT32;
+
+                        // Componente de la interfaz para mostrar el proceso del test
+                        this.component = mainActivity.findViewById(R.id.textViewMovenetL32);
                         break;
                 }
 
@@ -122,7 +130,10 @@ public class Movenet extends TensorFlowLiteModel {
                 // Inicializamos el valor del tipo de datos de entrada de la red
                 switch (dataTypeParam) {
                     case DATA_TYPE_UINT8:
-                        // Modelo Movenet thunder
+                        // Nombre visual para el modelo
+                        this.modelName = "Movenet thunder 8";
+
+                        // Modelo Movenet thunder int8
                         this.fileModelName = "lite-model_movenet_singlepose_thunder_tflite_int8_4.tflite";
 
                         // Inicializamos el nombre del fichero donde almacenaremos las predicciones del modelo
@@ -131,11 +142,17 @@ public class Movenet extends TensorFlowLiteModel {
                         this.outputPerformanceFileName = "Movenet_thunder_performance_8.txt";
 
                         // Inicializamos el valor del tipo de datos de entrada de la red
-                        modelDataType = DataType.UINT8;
+                        this.modelDataType = DataType.UINT8;
+
+                        // Componente de la interfaz para mostrar el proceso del test
+                        this.component = mainActivity.findViewById(R.id.textViewMovenetT8);
                         break;
 
                     case DATA_TYPE_FLOAT16:
-                        // Modelo Movenet thunder
+                        // Nombre visual para el modelo
+                        this.modelName = "Movenet thunder 16";
+
+                        // Modelo Movenet thunder float16
                         this.fileModelName = "lite-model_movenet_singlepose_thunder_tflite_float16_4.tflite";
 
                         // Inicializamos el nombre del fichero donde almacenaremos las predicciones del modelo
@@ -144,11 +161,17 @@ public class Movenet extends TensorFlowLiteModel {
                         this.outputPerformanceFileName = "Movenet_thunder_performance_16.txt";
 
                         // Inicializamos el valor del tipo de datos de entrada de la red
-                        modelDataType = DataType.UINT8;
+                        this.modelDataType = DataType.UINT8;
+
+                        // Componente de la interfaz para mostrar el proceso del test
+                        this.component = mainActivity.findViewById(R.id.textViewMovenetT16);
                         break;
 
                     case DATA_TYPE_FLOAT32:
-                        // Modelo Movenet thunder
+                        // Nombre visual para el modelo
+                        this.modelName = "Movenet thunder 32";
+
+                        // Modelo Movenet thunder float32
                         this.fileModelName = "lite-model_movenet_singlepose_thunder_3.tflite";
 
                         // Inicializamos el nombre del fichero donde almacenaremos las predicciones del modelo
@@ -157,61 +180,50 @@ public class Movenet extends TensorFlowLiteModel {
                         this.outputPerformanceFileName = "Movenet_thunder_performance_32.txt";
 
                         // Inicializamos el valor del tipo de datos de entrada de la red
-                        modelDataType = DataType.FLOAT32;
+                        this.modelDataType = DataType.FLOAT32;
+
+                        // Componente de la interfaz para mostrar el proceso del test
+                        this.component = mainActivity.findViewById(R.id.textViewMovenetT32);
                         break;
                 }
 
                 break;
         }
 
-
-//Debug.startMethodTracing("sample");
-//Trace.beginSection("ImageProcessorCreation");
-System.out.println(">>>>>>>> [Movenet] <<<<<<<<");
-System.out.println(">>>>>>>> [Movenet] debug.tflite.trace: " + System.getProperties().getProperty("debug.tflite.trace"));
-System.getProperties().setProperty("debug.tflite.trace", "1");
-System.out.println(">>>>>>>> [Movenet] debug.tflite.trace: " + System.getProperties().getProperty("debug.tflite.trace"));
-System.out.println(">>>>>>>> [Movenet] <<<<<<<<");
-
-
         // Inicializamos el procesador de las imagenes con los parametros (tamaño) del modelo especificado
         this.imageProcessor = new ImageProcessor.Builder().add(new ResizeOp(inputHeight, inputWidth, ResizeOp.ResizeMethod.BILINEAR)).build();
-
-
-//Trace.endSection();
-
-
     }
 
 
     /**
      *
      */
-    public void run() {
+//    public void run(Callback callback) {
+      public void run() {
         try {
 
-System.out.println(">>>>>>>> [Movenet INIT "  + this.fileModelName + "] <<<<<<<<");
+System.out.println("----------------------------------------------------------------------------------------------------");
+System.out.println("[MOVENET] STARTED MODEL: "  + this.modelName);
 
+            // Actualizamos el componente de la interfaz
+            mainActivity.runOnUiThread(() -> {
+                component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_yellow));
+            });
 
-            // Creamos un TensorImage (contenedor de objeto imagen para TensorFlow) del tipo del modelo (uint8)
+            // Inicializamos el modelo de la red
+            MappedByteBuffer tfliteModelMappedFile = FileUtil.loadMappedFile(mainActivity, fileModelName);
+            InterpreterApi interpreterApi = InterpreterApi.create(tfliteModelMappedFile, new InterpreterApi.Options());
+
+            // Creamos un TensorImage (contenedor de objeto imagen para TensorFlow) del tipo del modelo de la red (uint8, float16 o float32)
             TensorImage inputTensorImage = new TensorImage(modelDataType);
 
             // Creamos un TensorBuffer (buffer contenedor de datos para la salida) con el tamaño del modelo (1, 1, 17, 3) y el tipo del modelo (float32)
             TensorBuffer outputTensorBuffer = TensorBuffer.createFixedSize(new int[]{1, 1, 17, 3}, DataType.FLOAT32);
 
-            // Inicializamos el modelo de la red
-            MappedByteBuffer tfliteModelMappedFile = FileUtil.loadMappedFile(context, fileModelName);
-            InterpreterApi interpreterApi = InterpreterApi.create(tfliteModelMappedFile, new InterpreterApi.Options());
-
             // Comprobamos si se ha incializado correctamente
             if (interpreterApi != null) {
                 // Recorremos la lista de imagenes a procesar
                 for (int i = 0; i < imageFileNamesList.size(); i++) {
-
-
-//Debug.startMethodTracing("sample" + imageFileNamesList.get(i));
-//Trace.beginSection("ImageProcess: " + imageFileNamesList.get(i));
-
                     // Tomamos el tiempo total de procesado de cada imagen
                     long timeTotalForImage = System.currentTimeMillis();
 
@@ -236,77 +248,30 @@ System.out.println(">>>>>>>> [Movenet INIT "  + this.fileModelName + "] <<<<<<<<
                     // Recogemos el tiempo de inferencia nativo de la ultima operación
                     long timeNativeInference = interpreterApi.getLastNativeInferenceDurationNanoseconds() / 1000000;
 
-
-//Debug.stopMethodTracing();
-
-
-                    // SACAR EL TAMAÑO DE LA IMAGEN DE ENTRADA AL MODELO: SON FIJOS (no hace falta sacarlos de la entrada)                                          **** QUITAR ****
-//                    int inputWidth = interpreterApi.getInputTensor(0).shape()[1];                                                                                 **** QUITAR ****
-//                    int inputHeight = interpreterApi.getInputTensor(0).shape()[2];                                                                                **** QUITAR ****
-
-
-                    // Calculamos los ratios de ancho y alto con respecto a la imagen original
-//                    float widthRatio = (float) (bitmap.getWidth()) / inputWidth;
-//                    float heightRatio = (float) (bitmap.getHeight()) / inputHeight;
-
-
-                    // Obenemos el numero de puntos estimados de la salida de la imagen procesada
-                    int[] outputShape = interpreterApi.getOutputTensor(0).shape();
-                    int numKeyPoints = outputShape[2];
+                    // Recuperamos el tamaño de la imagen real para la normalización de las coordenadas de los keypoints
+                    int origWidth = bitmap.getWidth();
+                    int origHeight = bitmap.getHeight();
 
                     // Obtenemos los datos de la salida estimada
-                    float[] output = outputTensorBuffer.getFloatArray();
+                    float[] outputArray = outputTensorBuffer.getFloatArray();
 
-                    // Sacamos los datos de la estimación de los puntos de la imagen
+                    // Almacenamos los datos de la estimación de los keypoints de la imagen
                     float[] predictionsTmp = new float[NUM_KEYPOINTS_PREDICTION * 3];
-//                    float[] predictionsTmp = new float[NUM_KEYPOINTS_PREDICTION * 2];
 
-                    for (int j = 0; j < numKeyPoints; j++) {
-////                        float x2 = output[j * 3 + 1] * inputWidth * widthRatio;
-////                        float y2 = output[j * 3 + 0] * inputHeight * heightRatio;
-////
-////                        float score = output[j * 3 + 2];                                            // LOS SCORES NO HACEN FALTA
-////System.out.println("********> PUNTO2  " + j + ": " + x2 + ", " + y2 + ", " + score);
-//
-//
-//System.out.println("########> INDICE:" + (j * 3 + 1));
-//System.out.println("########> VALOR :" + output[j * 3 + 1]);
-//System.out.println("########> bitmap.getWidth():" + bitmap.getWidth());
-
+                    // Recorremos los keypoints de los datos de salida y los almacenamos normalizados
+                    for (int j = 0; j < NUM_KEYPOINTS_PREDICTION; j++) {
                         int indexTemp = j * 3;
-                        float x = output[indexTemp + 1] * (float) (bitmap.getWidth());
-                        float y = output[indexTemp] * (float) (bitmap.getHeight());
 
-                        float score = output[indexTemp + 2];
+                        float x = outputArray[indexTemp + 1];
+                        float y = outputArray[indexTemp];
+                        float score = outputArray[indexTemp + 2];
 
-
-//System.out.println("########> x:" + x);
-//System.out.println("########><########");
-//
-////System.out.println("********> PUNTO " + j + ": " + x + ", " + y);
-
-
-//                        if(score > 0.1) {
-                            predictionsTmp[indexTemp] = x;
-                            predictionsTmp[indexTemp + 1] = y;
-                            predictionsTmp[indexTemp + 2] = 2;                                              // Metemos un 2 en el tercer valor
-//                        }
-//                        else{
-//                            predictionsTmp[indexTemp] = 0;
-//                            predictionsTmp[indexTemp + 1] = 0;
-//                            predictionsTmp[indexTemp + 2] = 0;                                              // Metemos un 0 en el tercer valor
-//                        }
+                        predictionsTmp[indexTemp] = x * origWidth;
+                        predictionsTmp[indexTemp + 1] = y * origHeight;
+                        predictionsTmp[indexTemp + 2] = 2;
                     }
 
-//                    // Scores
-//                    int startIndexTemp = NUM_KEYPOINTS_PREDICTION * 2;
-//                    for (int j = 0; j < numKeyPoints; j++) {
-//                        float score = output[j * 3 + 2];
-//                        predictionsTmp[startIndexTemp + j] = score;
-//                    }
-
-
-                    // Recogemos el tiempo total de procesado dela imagen
+                    // Recogemos el tiempo total de procesado de la imagen
                     timeTotalForImage = System.currentTimeMillis() - timeTotalForImage;
 
                     // Creamos una cadena de texto con los valores de los tiempos tomados para la imagen
@@ -315,33 +280,35 @@ System.out.println(">>>>>>>> [Movenet INIT "  + this.fileModelName + "] <<<<<<<<
                     // Almacenamos los valores de cada imagen
                     this.imagePredictionsMap.put(imageFileNameTemp, predictionsTmp);
                     this.modelPerformanceMap.put(imageFileNameTemp, modelPerformanceInfo);
-
-//System.out.println("********> IMAGEN " + imageFileNameTemp + " [" + modelPerformanceInfo + "] ms <********");
-
-//Trace.endSection();
-
-
                 }
 
+                // Cerramos la red
                 interpreterApi.close();
-
+                // Escribimos a disco los resultados del modelo
                 this.writeResultsToFiles();
 
+                // Actualizamos el componente de la interfaz
+                mainActivity.runOnUiThread(() -> {
+                    component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
+                });
 
-System.out.println(">>>>>>>> [Movenet END  "  + this.fileModelName + "] <<<<<<<<");
-
+System.out.println("[MOVENET] FINISHED MODEL: "  + this.modelName);
 
             } else {
-                System.out.println("[Movenet] Critical error: couldn't instantiate Tensor Flow interpreter");
+                System.out.println("[MOVENET] Critical error: couldn't instantiate Tensor Flow interpreter");
                 System.exit(-1);
             }
+
+System.out.println("----------------------------------------------------------------------------------------------------");
+
         } catch (IOException e) {
-            System.out.println("[Movenet] Error: " + e.getMessage());
+            int color = ContextCompat.getColor(this.mainActivity, R.color.uva_red);
+            component.setBackgroundColor(color);
+
+            System.out.println("[MOVENET] ERROR: " + e.getMessage());
         }
 
-//Debug.stopMethodTracing();
+//        }).start();
 
     }
-
-
 }
