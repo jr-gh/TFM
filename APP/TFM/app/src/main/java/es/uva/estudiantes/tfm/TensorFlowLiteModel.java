@@ -1,38 +1,35 @@
 package es.uva.estudiantes.tfm;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
+import android.widget.TextView;
 
 import org.tensorflow.lite.support.image.ImageProcessor;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+
 import java.security.InvalidParameterException;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class TensorFlowLiteModel {
 
+public abstract class TensorFlowLiteModel {
     protected static int NUM_KEYPOINTS_PREDICTION = 17;
 
-    protected Context context;
+    protected MainActivity mainActivity;
+    public TextView component;
 
+    protected String modelName;
     protected String fileModelName;
     protected String outputPredictionsFileName;
     protected String outputPerformanceFileName;
-
 
     protected List<String> imageFileNamesList;
 //    protected HashMap<String, float[]> imageAnnotationsMap;
@@ -164,7 +161,7 @@ public abstract class TensorFlowLiteModel {
             List<String> imagesInfo = new ArrayList<String>();
             for (Map.Entry<String, float[]> imageOutput : this.imagePredictionsMap.entrySet()) {
                 String imageIdString = imageOutput.getKey();
-                int imageId = Integer.parseInt(imageIdString.substring(0, imageIdString.length()-4));
+                int imageId = Integer.parseInt(imageIdString.substring(0, imageIdString.length() - 4));
 
                 float[] imageKeypointsArray = imageOutput.getValue();
                 String imageKeypoints = "";
@@ -186,6 +183,8 @@ public abstract class TensorFlowLiteModel {
             if (outputPredictions.exists()) {
                 outputPredictions.delete();
             }
+
+            System.out.println(">>>>>>>> [TensorFlowLiteModel] PATH FICHERO: " + outputPredictions.getAbsolutePath());
 
             if (outputPredictions.createNewFile()) {
                 FileOutputStream outputFOS = new FileOutputStream(outputPredictions);
@@ -248,8 +247,6 @@ public abstract class TensorFlowLiteModel {
             System.out.println(">>>>>>>> [TensorFlowLiteModel] Error: " + e.getMessage() + " <<<<<<<<");
         }
     }
-
-
 
 
 //    protected void writeResultsToFile() {
@@ -323,13 +320,14 @@ public abstract class TensorFlowLiteModel {
 //    }
 
 
-
-
+//    public interface Callback {
+//        void onFinished();
+//    }
 
     /**
      *
      */
-    protected abstract void run();
+//    protected abstract void run(Callback callback);
 
 
 //    /**
@@ -338,13 +336,6 @@ public abstract class TensorFlowLiteModel {
 //    protected void analize() {
 //
 //    }
-
-
-
-
-
-
-
 
 
 //    private void checkExternalMedia(){
@@ -430,7 +421,6 @@ public abstract class TensorFlowLiteModel {
 //        }
 ////        tv.append("\n\nThat is all");
 //    }
-
 
 
 }
