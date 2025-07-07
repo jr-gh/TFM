@@ -18,6 +18,9 @@ import java.nio.MappedByteBuffer;
 import java.security.InvalidParameterException;
 
 
+/**
+ *
+ */
 public class Movenet extends TensorFlowLiteModel {
 
     public final static int TYPE_LIGHTNING = 1;
@@ -34,15 +37,15 @@ public class Movenet extends TensorFlowLiteModel {
 
 
     /**
-     * @param contextParam
+     * @param mainActivityParam
      * @param typeParam
      */
-    protected Movenet(MainActivity contextParam, int typeParam, int dataTypeParam) {
+    protected Movenet(MainActivity mainActivityParam, int typeParam, int dataTypeParam) {
         // Comprobamos y leemos los ficheros de datos (lista de imagenes y anotaciones)
         super();
 
         // Comprobamos los parámetros de entrada
-        if (contextParam == null) {
+        if (mainActivityParam == null) {
             throw new InvalidParameterException("[Movenet] ERROR: Invalid CONTEXT parameter");
         }
         if (typeParam != TYPE_LIGHTNING && typeParam != TYPE_THUNDER) {
@@ -53,7 +56,7 @@ public class Movenet extends TensorFlowLiteModel {
         }
 
         // Definimos los parámetros de la red
-        this.mainActivity = contextParam;
+        this.mainActivity = mainActivityParam;
 
         switch (typeParam) {
             case TYPE_LIGHTNING:
@@ -198,14 +201,13 @@ public class Movenet extends TensorFlowLiteModel {
     /**
      *
      */
-//    public void run(Callback callback) {
-      public void run() {
+    public void run() {
         try {
 
 System.out.println("----------------------------------------------------------------------------------------------------");
-System.out.println("[MOVENET] STARTED MODEL: "  + this.modelName);
+System.out.println("[MOVENET] STARTED MODEL: " + this.modelName);
 
-            // Actualizamos el componente de la interfaz
+            // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: AMARILLO (el modelo está ejecutando el test)
             mainActivity.runOnUiThread(() -> {
                 component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_yellow));
             });
@@ -284,31 +286,31 @@ System.out.println("[MOVENET] STARTED MODEL: "  + this.modelName);
 
                 // Cerramos la red
                 interpreterApi.close();
+
                 // Escribimos a disco los resultados del modelo
                 this.writeResultsToFiles();
 
-                // Actualizamos el componente de la interfaz
+                // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: VERDE (el modelo ha terminado el test)
                 mainActivity.runOnUiThread(() -> {
                     component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
                 });
 
-System.out.println("[MOVENET] FINISHED MODEL: "  + this.modelName);
+System.out.println("[MOVENET] FINISHED MODEL: " + this.modelName);
+System.out.println("----------------------------------------------------------------------------------------------------");
 
             } else {
                 System.out.println("[MOVENET] Critical error: couldn't instantiate Tensor Flow interpreter");
                 System.exit(-1);
             }
 
-System.out.println("----------------------------------------------------------------------------------------------------");
-
         } catch (IOException e) {
-            int color = ContextCompat.getColor(this.mainActivity, R.color.uva_red);
-            component.setBackgroundColor(color);
+            // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: ROJO (el modelo ha dado algún error)
+            mainActivity.runOnUiThread(() -> {
+                int color = ContextCompat.getColor(this.mainActivity, R.color.uva_red);
+                component.setBackgroundColor(color);
+            });
 
             System.out.println("[MOVENET] ERROR: " + e.getMessage());
         }
-
-//        }).start();
-
     }
 }
