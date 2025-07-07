@@ -2,17 +2,136 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="match_parent"
+            android:layout_height="138dp"
+            app:srcCompat="@drawable/uva_logo" />
+
+        <TextView
+            android:id="@+id/textViewModels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:text="Modelos incluidos en el test"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewMovenetL8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movenet lightning 8" />
+
+        <TextView
+            android:id="@+id/textViewMovenetL16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movenet lightning 16" />
+
+        <TextView
+            android:id="@+id/textViewMovenetL32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movenet lightning 32" />
+
+        <TextView
+            android:id="@+id/textViewMovenetT8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movenet thunder 8" />
+
+        <TextView
+            android:id="@+id/textViewMovenetT16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movenet thunder 16" />
+
+        <TextView
+            android:id="@+id/textViewMovenetT32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movenet thunder 32" />
+
+        <TextView
+            android:id="@+id/textViewBlazeposeL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BlazePose lite" />
+
+        <TextView
+            android:id="@+id/textViewBlazeposeF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BlazePose full" />
+
+        <TextView
+            android:id="@+id/textViewBlazeposeH"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BlazePose heavy" />
+
+        <TextView
+            android:id="@+id/textViewYolo8n"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yolo8-pose nano" />
+
+        <TextView
+            android:id="@+id/textViewYolo8s"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yolo8-pose small" />
+
+        <TextView
+            android:id="@+id/textViewYolo8m"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yolo8-pose medium" />
+
+        <TextView
+            android:id="@+id/textViewInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="Al pulsar EJECUTAR TEST se ejecutarán estos modelos para la estimación de poses sobre un dataset de 316 imágenes y se generarán ficheros de salida con los resultados de precisión y rendimiento de cada modelo en este dispositivo."
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/buttonExecution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="EJECUTAR TEST" />
+
+        <TextView
+            android:id="@+id/textViewResultsPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/buttonExit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salir" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

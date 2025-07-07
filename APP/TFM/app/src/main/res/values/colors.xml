@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="uva_red">#c20c25</color>
+    <color name="uva_yellow">#ecbd17</color>
+    <color name="uva_green">#45e840</color>
+    <color name="grey1">#eeeeee</color>
+    <color name="grey2">#c4c4c4</color>
+    <color name="grey3">#474747</color>
+
 </resources>
