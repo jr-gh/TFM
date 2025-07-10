@@ -110,22 +110,23 @@
             android:id="@+id/textViewInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:text="Al pulsar EJECUTAR TEST se ejecutarán estos modelos para la estimación de poses sobre un dataset de 316 imágenes y se generarán ficheros de salida con los resultados de precisión y rendimiento de cada modelo en este dispositivo."
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Al pulsar EJECUTAR TEST se ejecutarán los modelos para la estimación de poses sobre un dataset de 316 imágenes y se generarán ficheros de salida con los resultados de precisión y rendimiento de cada modelo en este dispositivo."
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/buttonExecution"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:text="EJECUTAR TEST" />
 
-        <TextView
-            android:id="@+id/textViewResultsPath"
+        <Button
+            android:id="@+id/buttonShare"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="COMPARTIR RESULTADOS" />
 
         <Button
             android:id="@+id/buttonExit"
