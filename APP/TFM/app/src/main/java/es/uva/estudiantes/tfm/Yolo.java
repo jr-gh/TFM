@@ -44,10 +44,10 @@ public class Yolo extends TensorFlowLiteModel {
 
         // Comprobamos los parámetros de entrada
         if (mainActivityParam == null) {
-            throw new InvalidParameterException("[Yolo] ERROR: Invalid CONTEXT parameter");
+            throw new InvalidParameterException("[YOLO8] ERROR: Invalid CONTEXT parameter");
         }
         if (typeParam != TYPE_NANO && typeParam != TYPE_SMALL && typeParam != TYPE_MEDIUM) {
-            throw new InvalidParameterException("[Yolo] ERROR: Invalid TYPE parameter, must be one of LIGHTNING (1) or THUNDER (2)");
+            throw new InvalidParameterException("[YOLO8] ERROR: Invalid TYPE parameter, must be one of LIGHTNING (1) or THUNDER (2)");
         }
 
         // Definimos los parámetros de la red
@@ -121,7 +121,7 @@ public class Yolo extends TensorFlowLiteModel {
         try {
 
 System.out.println("----------------------------------------------------------------------------------------------------");
-System.out.println("[YOLO8] STARTED MODEL: "  + this.modelName);
+System.out.println("[YOLO8.run] STARTED MODEL: "  + this.modelName);
 
             // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: AMARILLO (el modelo está ejecutando el test)
             mainActivity.runOnUiThread(() -> {
@@ -211,11 +211,11 @@ System.out.println("[YOLO8] STARTED MODEL: "  + this.modelName);
                     component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
                 });
 
-System.out.println("[YOLO8] FINISHED MODEL: "  + this.modelName);
+System.out.println("[YOLO8.run] FINISHED MODEL: "  + this.modelName);
 System.out.println("----------------------------------------------------------------------------------------------------");
 
             } else {
-                System.out.println("[YOLO8] Critical error: couldn't instantiate Tensor Flow interpreter");
+                System.out.println("[YOLO8.run] CRITICAL ERROR: couldn't instantiate Tensor Flow interpreter");
                 System.exit(-1);
             }
 
@@ -226,7 +226,7 @@ System.out.println("------------------------------------------------------------
                 component.setBackgroundColor(color);
             });
 
-            System.out.println("[YOLO8] ERROR: " + e.getMessage());
+            System.out.println("[YOLO8.run] ERROR: " + e.getMessage());
         }
     }
 }

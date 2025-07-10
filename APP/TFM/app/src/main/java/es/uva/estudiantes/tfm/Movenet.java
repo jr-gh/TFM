@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import androidx.core.content.ContextCompat;
 
 import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.InterpreterApi;
 import org.tensorflow.lite.support.common.FileUtil;
 import org.tensorflow.lite.support.image.ImageProcessor;
@@ -13,6 +14,7 @@ import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.security.InvalidParameterException;
@@ -205,7 +207,7 @@ public class Movenet extends TensorFlowLiteModel {
         try {
 
 System.out.println("----------------------------------------------------------------------------------------------------");
-System.out.println("[MOVENET] STARTED MODEL: " + this.modelName);
+System.out.println("[MOVENET.run] STARTED MODEL: " + this.modelName);
 
             // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: AMARILLO (el modelo está ejecutando el test)
             mainActivity.runOnUiThread(() -> {
@@ -215,6 +217,8 @@ System.out.println("[MOVENET] STARTED MODEL: " + this.modelName);
             // Inicializamos el modelo de la red
             MappedByteBuffer tfliteModelMappedFile = FileUtil.loadMappedFile(mainActivity, fileModelName);
             InterpreterApi interpreterApi = InterpreterApi.create(tfliteModelMappedFile, new InterpreterApi.Options());
+//            File tfliteModelMappedFile = new File(fileModelName);
+//            InterpreterApi interpreterApi = new Interpreter(tfliteModelMappedFile, new Interpreter.Options());
 
             // Creamos un TensorImage (contenedor de objeto imagen para TensorFlow) del tipo del modelo de la red (uint8, float16 o float32)
             TensorImage inputTensorImage = new TensorImage(modelDataType);
@@ -295,11 +299,11 @@ System.out.println("[MOVENET] STARTED MODEL: " + this.modelName);
                     component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
                 });
 
-System.out.println("[MOVENET] FINISHED MODEL: " + this.modelName);
+System.out.println("[MOVENET.run] FINISHED MODEL: " + this.modelName);
 System.out.println("----------------------------------------------------------------------------------------------------");
 
             } else {
-                System.out.println("[MOVENET] Critical error: couldn't instantiate Tensor Flow interpreter");
+                System.out.println("[MOVENET.run] CRITICAL ERROR: couldn't instantiate Tensor Flow interpreter");
                 System.exit(-1);
             }
 
@@ -310,7 +314,7 @@ System.out.println("------------------------------------------------------------
                 component.setBackgroundColor(color);
             });
 
-            System.out.println("[MOVENET] ERROR: " + e.getMessage());
+            System.out.println("[MOVENET.run] ERROR: " + e.getMessage());
         }
     }
 }

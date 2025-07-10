@@ -127,7 +127,7 @@ public abstract class TensorFlowLiteModel {
             }
 
             // Salvamos a un fichero en disco la información de la prediccion de los keypoints de todas las imagenes
-            File outputPredictions = new File(MainActivity.destinationFolderFile, this.outputPredictionsFileName);
+            File outputPredictions = new File(MainActivity.outputFolderFile, this.outputPredictionsFileName);
             if (outputPredictions.exists()) {
                 outputPredictions.delete();
             }
@@ -156,7 +156,7 @@ public abstract class TensorFlowLiteModel {
             }
 
         } catch (Exception e) {
-            System.out.println(">>>>>>>> [TensorFlowLiteModel] Error: " + e.getMessage() + " <<<<<<<<");
+            System.out.println(">>>>>>>> [TensorFlowLiteModel.writePredictionsToFile] Error: " + e.getMessage() + " <<<<<<<<");
         }
     }
 
@@ -167,7 +167,7 @@ public abstract class TensorFlowLiteModel {
     private void writePerformanceToFile() {
         try {
             // Salvamos a un fichero en disco la información del rendimiento de todas las imagenes
-            File outputPerformanceFile = new File(MainActivity.destinationFolderFile, this.outputPerformanceFileName);
+            File outputPerformanceFile = new File(MainActivity.outputFolderFile, this.outputPerformanceFileName);
             if (outputPerformanceFile.exists()) {
                 outputPerformanceFile.delete();
             }
@@ -189,7 +189,7 @@ public abstract class TensorFlowLiteModel {
                 outputFOS.close();
             }
         } catch (Exception e) {
-            System.out.println(">>>>>>>> [TensorFlowLiteModel] Error: " + e.getMessage() + " <<<<<<<<");
+            System.out.println(">>>>>>>> [TensorFlowLiteModel.writePerformanceToFile] Error: " + e.getMessage() + " <<<<<<<<");
         }
     }
 }

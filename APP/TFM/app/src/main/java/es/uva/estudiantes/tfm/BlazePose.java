@@ -71,10 +71,10 @@ public class BlazePose extends TensorFlowLiteModel {
 
         // Comprobamos los parámetros de entrada
         if (mainActivityParam == null) {
-            throw new InvalidParameterException("[BlazePose] ERROR: Invalid CONTEXT parameter");
+            throw new InvalidParameterException("[BLAZEPOSE] ERROR: Invalid CONTEXT parameter");
         }
         if (typeParam != TYPE_LITE && typeParam != TYPE_FULL && typeParam != TYPE_HEAVY) {
-            throw new InvalidParameterException("[BlazePose] ERROR: Invalid TYPE parameter, must be one of LIGHTNING (1) or THUNDER (2)");
+            throw new InvalidParameterException("[BLAZEPOSE] ERROR: Invalid TYPE parameter, must be one of LIGHTNING (1) or THUNDER (2)");
         }
 
         // Definimos los parámetros de la red
@@ -151,7 +151,7 @@ public class BlazePose extends TensorFlowLiteModel {
         try {
 
 System.out.println("----------------------------------------------------------------------------------------------------");
-System.out.println("[BLAZEPOSE] STARTED MODEL: "  + this.modelName);
+System.out.println("[BLAZEPOSE.run] STARTED MODEL: "  + this.modelName);
 
             // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: AMARILLO (el modelo está ejecutando el test)
             mainActivity.runOnUiThread(() -> {
@@ -241,11 +241,11 @@ System.out.println("[BLAZEPOSE] STARTED MODEL: "  + this.modelName);
                     component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
                 });
 
-System.out.println("[BLAZEPOSE] FINISHED MODEL: "  + this.modelName);
+System.out.println("[BLAZEPOSE.run] FINISHED MODEL: "  + this.modelName);
 System.out.println("----------------------------------------------------------------------------------------------------");
 
             } else {
-                System.out.println("[BLAZEPOSE] Critical error: couldn't instantiate Tensor Flow interpreter");
+                System.out.println("[BLAZEPOSE.run] CRITICAL ERROR: couldn't instantiate Tensor Flow interpreter");
                 System.exit(-1);
             }
 
@@ -256,7 +256,7 @@ System.out.println("------------------------------------------------------------
                 component.setBackgroundColor(color);
             });
 
-            System.out.println("[BLAZEPOSE] ERROR: " + e.getMessage());
+            System.out.println("[BLAZEPOSE.run] ERROR: " + e.getMessage());
         }
     }
 }
