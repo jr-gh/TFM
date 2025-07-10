@@ -29,6 +29,12 @@ android {
     buildFeatures {
         mlModelBinding true
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "PoseTest.apk"
+        }
+    }
 }
 
 dependencies {
