@@ -23,12 +23,21 @@ import java.util.Map;
 
 
 /**
- *
+ * Clase de estimación de posturas de la familia de modelos BlazePose
  */
 public class BlazePose extends TensorFlowLiteModel {
 
+    /**
+     * Constante para el tipo de modelo Lite
+     */
     public final static int TYPE_LITE = 1;
+    /**
+     * Constante para el tipo de modelo Full
+     */
     public final static int TYPE_FULL = 2;
+    /**
+     * Constante para el tipo de modelo Heavy
+     */
     public final static int TYPE_HEAVY = 3;
 
     private DataType modelDataType;
@@ -36,8 +45,7 @@ public class BlazePose extends TensorFlowLiteModel {
     private int inputWidth = 256;
     private int inputHeight = 256;
 
-    // Mapa con los keypoints de COCO (17 keypoints) que usaremos de las estimaciones de BlazePose (33 keypoints)
-    public static final Map<Integer, Integer> COCO_BLAZEPOSE_KEYPOINTS_MAP;
+    private static final Map<Integer, Integer> COCO_BLAZEPOSE_KEYPOINTS_MAP;
 
     static {
         COCO_BLAZEPOSE_KEYPOINTS_MAP = new HashMap<>();
@@ -62,11 +70,13 @@ public class BlazePose extends TensorFlowLiteModel {
 
 
     /**
-     * @param mainActivityParam
-     * @param typeParam
+     * Constructor de la clase
+     *
+     * @param mainActivityParam Actividad principal de la APP
+     * @param typeParam         Tipo de modelo
      */
     protected BlazePose(MainActivity mainActivityParam, int typeParam) {
-        // Comprobamos y leemos los ficheros de datos (lista de imagenes y anotaciones)
+        // Comprobamos y leemos los ficheros de datos (lista de imágenes y anotaciones)
         super();
 
         // Comprobamos los parámetros de entrada
@@ -74,7 +84,7 @@ public class BlazePose extends TensorFlowLiteModel {
             throw new InvalidParameterException("[BLAZEPOSE] ERROR: Invalid CONTEXT parameter");
         }
         if (typeParam != TYPE_LITE && typeParam != TYPE_FULL && typeParam != TYPE_HEAVY) {
-            throw new InvalidParameterException("[BLAZEPOSE] ERROR: Invalid TYPE parameter, must be one of LIGHTNING (1) or THUNDER (2)");
+            throw new InvalidParameterException("[BLAZEPOSE] ERROR: Invalid TYPE parameter, must be one of LITE (1), FULL (2) or HEAVY (3)");
         }
 
         // Definimos los parámetros de la red
@@ -133,25 +143,23 @@ public class BlazePose extends TensorFlowLiteModel {
         // Inicializamos el valor del tipo de datos de entrada de la red
         modelDataType = DataType.FLOAT32;
 
-        // Inicializamos el procesador de las imagenes con los parametros (tamaño) del modelo especificado
+        // Inicializamos el procesador de las imágenes con los parametros (tamaño) del modelo especificado
         ImageProcessor.Builder imageProcessorBuilder = new ImageProcessor.Builder()
                 .add(new ResizeOp(inputWidth, inputHeight, ResizeOp.ResizeMethod.BILINEAR))
-//                .add(new NormalizeOp(new float[]{0.0f}, new float[]{255.0f}))
                 .add(new NormalizeOp(0f, 255f)) // Normaliza a [0,1] si es necesario
-//                .add(new QuantizeOp(0f, 0.0f))
                 .add(new CastOp(modelDataType));
         imageProcessor = imageProcessorBuilder.build();
     }
 
 
     /**
-     *
+     * Método para correr la red sobre las imágenes
      */
     public void run() {
         try {
 
-System.out.println("----------------------------------------------------------------------------------------------------");
-System.out.println("[BLAZEPOSE.run] STARTED MODEL: "  + this.modelName);
+            System.out.println("----------------------------------------------------------------------------------------------------");
+            System.out.println("[BLAZEPOSE.run] STARTED MODEL: " + this.modelName);
 
             // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: AMARILLO (el modelo está ejecutando el test)
             mainActivity.runOnUiThread(() -> {
@@ -170,7 +178,7 @@ System.out.println("[BLAZEPOSE.run] STARTED MODEL: "  + this.modelName);
 
             // Comprobamos si se ha incializado correctamente
             if (interpreterApi != null) {
-                // Recorremos la lista de imagenes a procesar
+                // Recorremos la lista de imágenes a procesar
                 for (int i = 0; i < imageFileNamesList.size(); i++) {
                     // Tomamos el tiempo total de procesado de cada imagen
                     long timeTotalForImage = System.currentTimeMillis();
@@ -182,7 +190,7 @@ System.out.println("[BLAZEPOSE.run] STARTED MODEL: "  + this.modelName);
                     // Cargamos la imagen a procesar
                     inputTensorImage.load(bitmap);
 
-                    // Preprocesamos la imagen para adecuarla al tamaño de entrada definido por el modelo y que hemos especificado en el procesador de imagenes
+                    // Preprocesamos la imagen para adecuarla al tamaño de entrada definido por el modelo y que hemos especificado en el procesador de imágenes
                     TensorImage processedimage = imageProcessor.process(inputTensorImage);
 
                     // Tomamos el tiempo para cada imagen
@@ -241,8 +249,8 @@ System.out.println("[BLAZEPOSE.run] STARTED MODEL: "  + this.modelName);
                     component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
                 });
 
-System.out.println("[BLAZEPOSE.run] FINISHED MODEL: "  + this.modelName);
-System.out.println("----------------------------------------------------------------------------------------------------");
+                System.out.println("[BLAZEPOSE.run] FINISHED MODEL: " + this.modelName);
+                System.out.println("----------------------------------------------------------------------------------------------------");
 
             } else {
                 System.out.println("[BLAZEPOSE.run] CRITICAL ERROR: couldn't instantiate Tensor Flow interpreter");

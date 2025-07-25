@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,14 +22,23 @@ import java.util.zip.ZipOutputStream;
 
 
 /**
- *
+ * Clase actividad principal de la APP
  */
 public class MainActivity extends AppCompatActivity {
 
-    public static String APP_NAME = "TFM_ULTIMATE";
+    /**
+     * Nombre de la APP
+     */
+    public static String APP_NAME = "TFM_PoseTest";
 
-    public static String ZIP_NAME = "PoseTest.zip";
+    /**
+     * Nombre del fichero zip de salida
+     */
+    public static String ZIP_NAME = "TFM_PoseTest.zip";
 
+    /**
+     * Nombre del folder para los ficheros de salida
+     */
     public static File outputFolderFile;
 
     private Button executeButton;
@@ -42,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
+     * Evento de creación de la actividad
+     *
      * @param savedInstanceState
      */
     @Override
@@ -102,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                // Ejecutamos la salida de la aplicación
                                 System.exit(0);
                             }
                         })
@@ -109,22 +119,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        // Creamos la carpeta donde se generaran los ficheroas de salida
-//        String destinationFolderFullPath = "/" + Environment.DIRECTORY_DOCUMENTS + "/" + MainActivity.APP_NAME;
-//        this.destinationFolderFile = new File(destinationFolderFullPath);
-//        if (!this.destinationFolderFile.exists()) {
-//            this.destinationFolderFile.mkdirs();
-//
-//            System.out.println(">>>>>>>> [MainActivity] Folder created: " + APP_NAME);
-//        }
-
         // Creamos la carpeta donde se generaran los ficheroas de salida
         File externalStorageDirectoryFile = android.os.Environment.getExternalStorageDirectory();
         this.outputFolderFile = new File(externalStorageDirectoryFile.getAbsolutePath() + "/" + Environment.DIRECTORY_DOCUMENTS + "/" + MainActivity.APP_NAME);
         if (!this.outputFolderFile.exists()) {
             this.outputFolderFile.mkdirs();
-
-            System.out.println(">>>>>>>> [MainActivity] Folder created: " + APP_NAME);
         }
     }
 
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Creamos un thread nuevo para la ejecución de tareas largas
         new Thread(() -> {
-            // Actualizamos el componente de la interfaz
+            // Ejecutamos en el thread de la interfaz las actualizaciones del color de estado los componentes
             runOnUiThread(() -> {
                 findViewById(R.id.textViewMovenetL8).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
                 findViewById(R.id.textViewMovenetL16).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
@@ -152,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.textViewYolo8m).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
             });
 
-            // Ejecutamos en el thread de la interfaz las actualizaciones de la misma
+            // Ejecutamos en el thread de la interfaz las actualizaciones de los componentes botones
             runOnUiThread(() -> {
                 // Actualizamos el estado del botón "EJECUTAR TEST" en la interfaz: DESHABILITADO
                 executeButton.setEnabled(false);
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
             //----------------------------------------------------------------------------------------------------
-            // Modelos de la familia MOVENET
+            // Ejecutamos los modelos de la familia MOVENET
             //----------------------------------------------------------------------------------------------------
             Movenet movenet_lightning_8 = new Movenet(this, Movenet.TYPE_LIGHTNING, Movenet.DATA_TYPE_UINT8);
             movenet_lightning_8.run();
@@ -188,14 +187,7 @@ public class MainActivity extends AppCompatActivity {
             //----------------------------------------------------------------------------------------------------
 
             //----------------------------------------------------------------------------------------------------
-            // Modelos de la familia POSENET                   ¡¡¡¡¡¡¡¡ DESCARTADO !!!!!!!!
-            //----------------------------------------------------------------------------------------------------
-//        Posenet posenet = new Posenet(this);
-//        posenet.run();
-            //----------------------------------------------------------------------------------------------------
-
-            //----------------------------------------------------------------------------------------------------
-            // Modelos de la familia BLAZEPOSE
+            // Ejecutamos los modelos de la familia BLAZEPOSE
             //----------------------------------------------------------------------------------------------------
             BlazePose blazePoseLite = new BlazePose(this, BlazePose.TYPE_LITE);
             blazePoseLite.run();
@@ -208,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
             //----------------------------------------------------------------------------------------------------
 
             //----------------------------------------------------------------------------------------------------
-            // Modelos de la familia YOLO8-pose
+            // Ejecutamos los modelos de la familia YOLO8-pose
             //----------------------------------------------------------------------------------------------------
             Yolo yolo8_nano = new Yolo(this, Yolo.TYPE_NANO);
             yolo8_nano.run();
@@ -220,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
             yolo8_medium.run();
             //----------------------------------------------------------------------------------------------------
 
-            // Ejecutamos en el thread de la interfaz las actualizaciones de la misma
+            // Ejecutamos en el thread de la interfaz las actualizaciones de los componentes botones
             runOnUiThread(() -> {
                 // Actualizamos el estado del botón "EJECUTAR TEST" en la interfaz: HABILITADO
                 executeButton.setEnabled(true);
@@ -232,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 exitButton.setEnabled(true);
             });
 
+            // Generamos el zip de salida con todos los ficheros generados
             generateOutputZipFile();
 
         }).start();
@@ -239,8 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * @return
-     * @throws IOException
+     * Genera un zip con todos los ficheros de salida
      */
     private void generateOutputZipFile() {
         try {
@@ -249,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outputFolderZipFile));
 
             // Recuperamos la lista de ficheros de la carpeta destino
-            //        File[] fileList = new File(Environment.DIRECTORY_DOCUMENTS + "/" + MainActivity.APP_NAME).listFiles();
             File[] fileList = this.outputFolderFile.listFiles();
 
             // Añadimos los ficheros de salida eal fichero zip y los vamos borrando
@@ -276,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             zipOutputStream.close();
+
         } catch (Exception e) {
             System.out.println(">>>>>>>> [MainActivity.generateOutputZipFile] Error: " + e.getMessage() + " <<<<<<<<");
         }

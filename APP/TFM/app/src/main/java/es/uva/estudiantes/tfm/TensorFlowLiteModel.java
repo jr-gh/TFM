@@ -21,34 +21,67 @@ import java.util.Map;
 
 
 /**
- *
+ * Clase base para todos los modelos
  */
 public abstract class TensorFlowLiteModel {
+    /**
+     * Constante con el numero de keypoints a estimar
+     */
     protected static int NUM_KEYPOINTS_PREDICTION = 17;
 
+    /**
+     * Objeto MainActivity principal
+     */
     protected MainActivity mainActivity;
-    public TextView component;
 
+    /**
+     * Objeto componente de la interfaz para mostrar el proceso del test
+     */
+    protected TextView component;
+
+    /**
+     * Nombre del modelo
+     */
     protected String modelName;
+    /**
+     * Nombre del fichero del modelo
+     */
     protected String fileModelName;
+    /**
+     * Nombre del fichero de salida con las predicciones del modelo
+     */
     protected String outputPredictionsFileName;
+    /**
+     * Nombre del fichero de salida con los rendimientos del modelo
+     */
     protected String outputPerformanceFileName;
 
+    /**
+     * Lista de strings con los nombres de las imágenes
+     */
     protected List<String> imageFileNamesList;
-//    protected HashMap<String, float[]> imageAnnotationsMap;
 
+    /**
+     * Hashmap con las predicciones por imagen
+     */
     protected HashMap<String, float[]> imagePredictionsMap;
 
+    /**
+     * Hashmap con los rendimientos por imagen
+     */
     protected HashMap<String, String> modelPerformanceMap;
 
+    /**
+     * Procesador de las imágenes
+     */
     protected ImageProcessor imageProcessor;
 
 
     /**
-     *
+     * Constructor de la clase
      */
     TensorFlowLiteModel() {
-        // Leemos y comprobamos la lista de las imagenes a procesar
+        // Leemos y comprobamos la lista de las imágenes a procesar
         this.imageFileNamesList = readImageFileNames();
         if (imageFileNamesList == null || imageFileNamesList.isEmpty()) {
             throw new InvalidParameterException("[TensorFlowLiteModel] ERROR: Invalid IMAGE FILE NAME LIST, not found or empty");
@@ -63,8 +96,9 @@ public abstract class TensorFlowLiteModel {
 
 
     /**
+     * Lee los nombres de las imágenes a aestimas del fichero con la lista
      *
-     * @return
+     * @return lista de strings con los nombres de las imágenes
      */
     private List<String> readImageFileNames() {
         List<String> imageFileNamesListTmp = new ArrayList<String>();
@@ -92,7 +126,7 @@ public abstract class TensorFlowLiteModel {
 
 
     /**
-     *
+     * Escribe los resultados a ficheros
      */
     protected void writeResultsToFiles() {
         writePredictionsToFile();
@@ -102,7 +136,7 @@ public abstract class TensorFlowLiteModel {
 
 
     /**
-     *
+     * Escribe las predicciones por imagen a fichero
      */
     protected void writePredictionsToFile() {
         try {
@@ -126,7 +160,7 @@ public abstract class TensorFlowLiteModel {
                 imagesInfo.add(imageLine);
             }
 
-            // Salvamos a un fichero en disco la información de la prediccion de los keypoints de todas las imagenes
+            // Salvamos a un fichero en disco la información de la prediccion de los keypoints de todas las imágenes
             File outputPredictions = new File(MainActivity.outputFolderFile, this.outputPredictionsFileName);
             if (outputPredictions.exists()) {
                 outputPredictions.delete();
@@ -162,11 +196,11 @@ public abstract class TensorFlowLiteModel {
 
 
     /**
-     *
+     * Escribe los rendimientos por imagen a fichero
      */
     private void writePerformanceToFile() {
         try {
-            // Salvamos a un fichero en disco la información del rendimiento de todas las imagenes
+            // Salvamos a un fichero en disco la información del rendimiento de todas las imágenes
             File outputPerformanceFile = new File(MainActivity.outputFolderFile, this.outputPerformanceFileName);
             if (outputPerformanceFile.exists()) {
                 outputPerformanceFile.delete();

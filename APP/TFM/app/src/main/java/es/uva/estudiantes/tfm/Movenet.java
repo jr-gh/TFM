@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import androidx.core.content.ContextCompat;
 
 import org.tensorflow.lite.DataType;
-import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.InterpreterApi;
 import org.tensorflow.lite.support.common.FileUtil;
 import org.tensorflow.lite.support.image.ImageProcessor;
@@ -14,22 +13,36 @@ import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.security.InvalidParameterException;
 
 
 /**
- *
+ * Clase de estimación de posturas de la familia de modelos Movenet
  */
 public class Movenet extends TensorFlowLiteModel {
 
+    /**
+     * Constante para el tipo de modelo de la subfamilia Lightning
+     */
     public final static int TYPE_LIGHTNING = 1;
+    /**
+     * Constante para el tipo de modelo de la subfamilia thunder
+     */
     public final static int TYPE_THUNDER = 2;
 
+    /**
+     * Constante para el tipo de datos UINT8
+     */
     public final static int DATA_TYPE_UINT8 = 1;
+    /**
+     * Constante para el tipo de datos FLOAT16
+     */
     public final static int DATA_TYPE_FLOAT16 = 2;
+    /**
+     * Constante para el tipo de datos FLOAT32
+     */
     public final static int DATA_TYPE_FLOAT32 = 3;
 
     private DataType modelDataType;
@@ -39,11 +52,14 @@ public class Movenet extends TensorFlowLiteModel {
 
 
     /**
-     * @param mainActivityParam
-     * @param typeParam
+     * Constructor de la clase
+     *
+     * @param mainActivityParam Actividad principal de la APP
+     * @param typeParam         Tipo de modelo
+     * @param dataTypeParam     Tipo de datos del modelo
      */
     protected Movenet(MainActivity mainActivityParam, int typeParam, int dataTypeParam) {
-        // Comprobamos y leemos los ficheros de datos (lista de imagenes y anotaciones)
+        // Comprobamos y leemos los ficheros de datos (lista de imágenes y anotaciones)
         super();
 
         // Comprobamos los parámetros de entrada
@@ -124,7 +140,6 @@ public class Movenet extends TensorFlowLiteModel {
                         this.component = mainActivity.findViewById(R.id.textViewMovenetL32);
                         break;
                 }
-
                 break;
 
             case TYPE_THUNDER:
@@ -191,23 +206,22 @@ public class Movenet extends TensorFlowLiteModel {
                         this.component = mainActivity.findViewById(R.id.textViewMovenetT32);
                         break;
                 }
-
                 break;
         }
 
-        // Inicializamos el procesador de las imagenes con los parametros (tamaño) del modelo especificado
+        // Inicializamos el procesador de las imágenes con los parametros (tamaño) del modelo especificado
         this.imageProcessor = new ImageProcessor.Builder().add(new ResizeOp(inputHeight, inputWidth, ResizeOp.ResizeMethod.BILINEAR)).build();
     }
 
 
     /**
-     *
+     * Método para correr la red sobre las imágenes
      */
     public void run() {
         try {
 
-System.out.println("----------------------------------------------------------------------------------------------------");
-System.out.println("[MOVENET.run] STARTED MODEL: " + this.modelName);
+            System.out.println("----------------------------------------------------------------------------------------------------");
+            System.out.println("[MOVENET.run] STARTED MODEL: " + this.modelName);
 
             // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: AMARILLO (el modelo está ejecutando el test)
             mainActivity.runOnUiThread(() -> {
@@ -217,8 +231,6 @@ System.out.println("[MOVENET.run] STARTED MODEL: " + this.modelName);
             // Inicializamos el modelo de la red
             MappedByteBuffer tfliteModelMappedFile = FileUtil.loadMappedFile(mainActivity, fileModelName);
             InterpreterApi interpreterApi = InterpreterApi.create(tfliteModelMappedFile, new InterpreterApi.Options());
-//            File tfliteModelMappedFile = new File(fileModelName);
-//            InterpreterApi interpreterApi = new Interpreter(tfliteModelMappedFile, new Interpreter.Options());
 
             // Creamos un TensorImage (contenedor de objeto imagen para TensorFlow) del tipo del modelo de la red (uint8, float16 o float32)
             TensorImage inputTensorImage = new TensorImage(modelDataType);
@@ -228,7 +240,7 @@ System.out.println("[MOVENET.run] STARTED MODEL: " + this.modelName);
 
             // Comprobamos si se ha incializado correctamente
             if (interpreterApi != null) {
-                // Recorremos la lista de imagenes a procesar
+                // Recorremos la lista de imágenes a procesar
                 for (int i = 0; i < imageFileNamesList.size(); i++) {
                     // Tomamos el tiempo total de procesado de cada imagen
                     long timeTotalForImage = System.currentTimeMillis();
@@ -240,7 +252,7 @@ System.out.println("[MOVENET.run] STARTED MODEL: " + this.modelName);
                     // Cargamos la imagen a procesar
                     inputTensorImage.load(bitmap);
 
-                    // Preprocesamos la imagen para adecuarla al tamaño de entrada definido por el modelo y que hemos especificado en el procesador de imagenes
+                    // Preprocesamos la imagen para adecuarla al tamaño de entrada definido por el modelo y que hemos especificado en el procesador de imágenes
                     inputTensorImage = imageProcessor.process(inputTensorImage);
 
                     // Tomamos el tiempo para cada imagen
@@ -299,8 +311,8 @@ System.out.println("[MOVENET.run] STARTED MODEL: " + this.modelName);
                     component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
                 });
 
-System.out.println("[MOVENET.run] FINISHED MODEL: " + this.modelName);
-System.out.println("----------------------------------------------------------------------------------------------------");
+                System.out.println("[MOVENET.run] FINISHED MODEL: " + this.modelName);
+                System.out.println("----------------------------------------------------------------------------------------------------");
 
             } else {
                 System.out.println("[MOVENET.run] CRITICAL ERROR: couldn't instantiate Tensor Flow interpreter");

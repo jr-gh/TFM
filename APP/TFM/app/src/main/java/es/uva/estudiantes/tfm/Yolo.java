@@ -20,12 +20,21 @@ import java.security.InvalidParameterException;
 
 
 /**
- *
+ * Clase de estimación de posturas de la familia de modelos Yolo8-pose
  */
 public class Yolo extends TensorFlowLiteModel {
 
+    /**
+     * Constante para el tipo de modelo nano
+     */
     public final static int TYPE_NANO = 1;
+    /**
+     * Constante para el tipo de modelo small
+     */
     public final static int TYPE_SMALL = 2;
+    /**
+     * Constante para el tipo de modelo medium
+     */
     public final static int TYPE_MEDIUM = 3;
 
     private DataType modelDataType;
@@ -35,11 +44,13 @@ public class Yolo extends TensorFlowLiteModel {
 
 
     /**
-     * @param mainActivityParam
-     * @param typeParam
+     * Constructor de la clase
+     *
+     * @param mainActivityParam Actividad principal de la APP
+     * @param typeParam         Tipo de modelo
      */
     protected Yolo(MainActivity mainActivityParam, int typeParam) {
-        // Comprobamos y leemos los ficheros de datos (lista de imagenes y anotaciones)
+        // Comprobamos y leemos los ficheros de datos (lista de imágenes y anotaciones)
         super();
 
         // Comprobamos los parámetros de entrada
@@ -47,7 +58,7 @@ public class Yolo extends TensorFlowLiteModel {
             throw new InvalidParameterException("[YOLO8] ERROR: Invalid CONTEXT parameter");
         }
         if (typeParam != TYPE_NANO && typeParam != TYPE_SMALL && typeParam != TYPE_MEDIUM) {
-            throw new InvalidParameterException("[YOLO8] ERROR: Invalid TYPE parameter, must be one of LIGHTNING (1) or THUNDER (2)");
+            throw new InvalidParameterException("[YOLO8] ERROR: Invalid TYPE parameter, must be one of NANO (1), SMALL (2) or MEDIUM (3)");
         }
 
         // Definimos los parámetros de la red
@@ -106,7 +117,7 @@ public class Yolo extends TensorFlowLiteModel {
         // Inicializamos el valor del tipo de datos de entrada de la red
         modelDataType = DataType.FLOAT32;
 
-        // Inicializamos el procesador de las imagenes con los parametros (tamaño) del modelo especificado
+        // Inicializamos el procesador de las imágenes con los parametros (tamaño) del modelo especificado
         this.imageProcessor = new ImageProcessor.Builder()
                 .add(new ResizeOp(inputHeight, inputWidth, ResizeOp.ResizeMethod.BILINEAR))
                 .add(new NormalizeOp(0f, 255f)) // Normaliza a [0,1] si es necesario
@@ -115,13 +126,13 @@ public class Yolo extends TensorFlowLiteModel {
 
 
     /**
-     *
+     * Método para correr la red sobre las imágenes
      */
     public void run() {
         try {
 
-System.out.println("----------------------------------------------------------------------------------------------------");
-System.out.println("[YOLO8.run] STARTED MODEL: "  + this.modelName);
+            System.out.println("----------------------------------------------------------------------------------------------------");
+            System.out.println("[YOLO8.run] STARTED MODEL: " + this.modelName);
 
             // Ejecutamos en el thread de la interfaz la actualización del componente visual del modelo: AMARILLO (el modelo está ejecutando el test)
             mainActivity.runOnUiThread(() -> {
@@ -140,7 +151,7 @@ System.out.println("[YOLO8.run] STARTED MODEL: "  + this.modelName);
 
             // Comprobamos si se ha incializado correctamente
             if (interpreterApi != null) {
-                // Recorremos la lista de imagenes a procesar
+                // Recorremos la lista de imágenes a procesar
                 for (int i = 0; i < imageFileNamesList.size(); i++) {
                     // Tomamos el tiempo total de procesado de cada imagen
                     long timeTotalForImage = System.currentTimeMillis();
@@ -152,7 +163,7 @@ System.out.println("[YOLO8.run] STARTED MODEL: "  + this.modelName);
                     // Cargamos la imagen a procesar
                     inputTensorImage.load(bitmap);
 
-                    // Preprocesamos la imagen para adecuarla al tamaño de entrada definido por el modelo y que hemos especificado en el procesador de imagenes
+                    // Preprocesamos la imagen para adecuarla al tamaño de entrada definido por el modelo y que hemos especificado en el procesador de imágenes
                     inputTensorImage = imageProcessor.process(inputTensorImage);
 
                     // Tomamos el tiempo para cada imagen
@@ -211,8 +222,8 @@ System.out.println("[YOLO8.run] STARTED MODEL: "  + this.modelName);
                     component.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.uva_green));
                 });
 
-System.out.println("[YOLO8.run] FINISHED MODEL: "  + this.modelName);
-System.out.println("----------------------------------------------------------------------------------------------------");
+                System.out.println("[YOLO8.run] FINISHED MODEL: " + this.modelName);
+                System.out.println("----------------------------------------------------------------------------------------------------");
 
             } else {
                 System.out.println("[YOLO8.run] CRITICAL ERROR: couldn't instantiate Tensor Flow interpreter");
