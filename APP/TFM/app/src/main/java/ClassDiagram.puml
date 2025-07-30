@@ -1,75 +1,72 @@
 @startuml
 
 class MainActivity {
-    public static String APP_NAME = "TFM_PoseTest";
-    public static String ZIP_NAME = "TFM_PoseTest.zip";
-    public static File outputFolderFile;
-    private Button executeButton;
-    private Button shareButton;
-    private Button exitButton;
+    + APP_NAME: static String "TFM_PoseTest"
+    + ZIP_NAME: static String "TFM_PoseTest.zip"
+    + outputFolderFile: File
 
-    protected void onCreate(Bundle)
-    private void executeModels()
-    private void generateOutputZipFile()
+    # void onCreate(Bundle)
+    - void executeModels()
+    - void generateOutputZipFile()
 
 }
 
 abstract class TensorFlowLiteModel {
-    protected static int NUM_KEYPOINTS_PREDICTION = 17;
-    protected MainActivity mainActivity;
-    protected TextView component;
-    protected String modelName;
-    protected String fileModelName;
-    protected String outputPredictionsFileName;
-    protected String outputPerformanceFileName;
-    protected List<String> imageFileNamesList;
-    protected HashMap<String, float[]> imagePredictionsMap;
-    protected HashMap<String, String> modelPerformanceMap;
-    protected ImageProcessor imageProcessor;
+    # NUM_KEYPOINTS_PREDICTION: static int 17
+    # mainActivity: MainActivity
+    # component: TextView
+    # modelName: String
+    # fileModelName: String
+    # outputPredictionsFileName: String
+    # outputPerformanceFileName: String
+    # imageFileNamesList: List<String>
+    # imagePredictionsMap: HashMap<String, float[]>
+    # modelPerformanceMap: HashMap<String, String>
+    # imageProcessor: ImageProcessor
 
-    private List<String> readImageFileNames()
-    protected void writeResultsToFiles()
-    protected void writePredictionsToFile()
-    private void writePerformanceToFile()
+    - List<String> readImageFileNames()
+    # void writeResultsToFiles()
+    # void writePredictionsToFile()
+    - void writePerformanceToFile()
 }
 
 class Movenet extends TensorFlowLiteModel {
-    public final static int TYPE_LIGHTNING = 1;
-    public final static int TYPE_THUNDER = 2;
-    public final static int DATA_TYPE_UINT8 = 1;
-    public final static int DATA_TYPE_FLOAT16 = 2;
-    public final static int DATA_TYPE_FLOAT32 = 3;
-    private DataType modelDataType;
-    private int inputWidth;
-    private int inputHeight;
+    + TYPE_LIGHTNING: static int 1
+    + TYPE_THUNDER: static int 2
+    + DATA_TYPE_UINT8: static int 1
+    + DATA_TYPE_FLOAT16: static int 2
+    + DATA_TYPE_FLOAT32: static int 3
+    - modelDataType: DataType
+    - inputWidth: int
+    - inputHeight: int
 
-    protected Movenet(MainActivity, int, int)
-    public void run()
+    # Movenet(MainActivity, int TYPE, int DATA_TYPE)
+    + void run()
 }
 
 class BlazePose extends TensorFlowLiteModel {
-    public final static int TYPE_LITE = 1;
-    public final static int TYPE_FULL = 2;
-    public final static int TYPE_HEAVY = 3;
-    private DataType modelDataType;
-    private int inputWidth = 256;
-    private int inputHeight = 256;
-    private static final Map<Integer, Integer> COCO_BLAZEPOSE_KEYPOINTS_MAP;
+    + TYPE_LITE: static int 1
+    + TYPE_FULL: static int 2
+    + TYPE_HEAVY: static int 3
+    - modelDataType: DataType
+    - inputWidth: int 256
+    - inputHeight: int 256
+    - COCO_BLAZEPOSE_KEYPOINTS_MAP: Map<Integer, Integer>
 
-    protected BlazePose(MainActivity, int)
-    public void run()
+    # BlazePose(MainActivity, int TYPE)
+    + void run()
 }
 
 class Yolo extends TensorFlowLiteModel {
-    public final static int TYPE_NANO = 1;
-    public final static int TYPE_SMALL = 2;
-    public final static int TYPE_MEDIUM = 3;
-    private DataType modelDataType;
-    private int inputWidth = 320;
-    private int inputHeight = 320;
+    + TYPE_NANO: static int 1
+    + TYPE_SMALL: static int 2
+    + TYPE_MEDIUM: static int 3
+    - modelDataType: DataType
+    - inputWidth: int 320
+    - inputHeight: int 320
 
-    protected Yolo(MainActivity, int)
-    public void run() {
+    # Yolo(MainActivity, int TYPE)
+    + void run()
 }
 
 @enduml
